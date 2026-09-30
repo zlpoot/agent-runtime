@@ -10,7 +10,8 @@
   "scripts": {
     "typecheck": "tsc --project tsconfig.json --noEmit && pnpm -r run typecheck",
     "test": "vitest run",
-    "build": "pnpm -r run build"
+    "build": "pnpm -r run build",
+    "inspect-model": "pnpm --filter @agent-runtime/model run inspect-model"
   },
   "devDependencies": {
     "@types/node": "22.20.4",

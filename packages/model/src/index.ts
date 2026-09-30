@@ -1,2 +1,2 @@
-/** Reserved for a fake model contract first; no provider is connected. */
-export {};
+export * from "./protocol.js";
+export * from "./scripted-fake-model.js";
