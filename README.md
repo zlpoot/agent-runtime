@@ -15,7 +15,7 @@
 
 ```sh
 node --version                 # v22.22.1
-corepack pnpm --version       # 10.33.0
+pnpm --version                # 10.33.0
 pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
