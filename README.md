@@ -11,9 +11,11 @@
 
 ## 环境与命令
 
-Node.js 22.12+ 的 22.x，或 24+（不支持 23.x；CI 使用 22，本地验证为 22.22.1）、pnpm 10.33.0。`packageManager` 和 `pnpm-lock.yaml` 固定依赖安装；推荐使用 Node.js 的 LTS 版本。可用 `corepack pnpm --version` 检查版本。
+固定环境为 Node.js **22.22.1**（`.node-version` 与 `engines.node`）和 pnpm **10.33.0**（`packageManager`）。先切换到该 Node 版本；CI 从 `.node-version` 读取同一个值。pnpm workspace 会检查 Node 与 pnpm 版本，版本不匹配时应先切换，再安装依赖。`pnpm-lock.yaml` 固定依赖解析结果。
 
 ```sh
+node --version                 # v22.22.1
+corepack pnpm --version       # 10.33.0
 pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
