@@ -5,7 +5,7 @@ export interface CliResponse {
 
 const help = `Agent Runtime Lab (Issue #2 scaffold)
 
-Usage: agent-runtime-lab --help
+Usage: node apps/cli/dist/main.js --help
 
 Runtime commands are not available yet. This command does not contact a model or execute tools.`;
 
@@ -16,6 +16,6 @@ export function resolveCliArgs(args: readonly string[]): CliResponse {
 
   return {
     exitCode: 2,
-    message: "Unknown command. Run with --help to see the scaffold status."
+    message: "Unknown command. Run node apps/cli/dist/main.js --help to see the scaffold status."
   };
 }
