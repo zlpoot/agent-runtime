@@ -1,6 +1,6 @@
 # Agent Runtime Lab
 
-一个用于理解并实验 Agent Runtime 机制的 TypeScript 项目。当前只完成 [Issue #2](https://github.com/zlpoot/agent-runtime/issues/2) 的工程骨架；CLI 仅说明状态，不会连接模型或执行工具。
+一个用于理解并实验 Agent Runtime 机制的 TypeScript 项目。[Issue #2](https://github.com/zlpoot/agent-runtime/issues/2) 已建立工程骨架；[Issue #3](https://github.com/zlpoot/agent-runtime/issues/3) 增加最小模型协议与 Scripted Fake Model。CLI 仍仅说明状态；实验只展示模型提案，不连接真实模型或执行工具。
 
 ## 目标
 
@@ -20,10 +20,11 @@ pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm inspect-model
 node apps/cli/dist/main.js --help
 ```
 
-默认测试只检查本地纯函数，不读取密钥、不请求模型 API、不产生模型费用。`.env.example` 没有真实配置值。本阶段不需要 `.env`。
+默认测试只运行本地协议解析和 Scripted Fake Model，不读取密钥、不请求模型 API、不产生模型费用。`.env.example` 没有真实配置值。本阶段不需要 `.env`。
 
 ## 目录
 
@@ -31,7 +32,7 @@ node apps/cli/dist/main.js --help
 | --- | --- |
 | `apps/cli` | 当前只有状态说明入口；控制面在后续 Issue 实现 |
 | `packages/core` | 预留自研 Loop 与状态转换代码的位置 |
-| `packages/model` | 预留 Fake Model 与后续模型适配器的位置 |
+| `packages/model` | 版本化模型协议、Scripted Fake Model 与提案检查实验 |
 | `packages/tools` | 预留工具契约与派发代码的位置 |
 | `labs` | 可重复运行的实验说明、预期故障与脱敏证据 |
 | `docs/lessons` | 学习问题、实验解释和待用户填写的学习验收 |
@@ -46,7 +47,7 @@ node apps/cli/dist/main.js --help
 | M5–M8 | #15–#24 | 恢复、副作用对账、上下文、控制面与完成验收 |
 | 集成与 V0.1 | #25–#27 | 独立集成和综合验收 |
 
-详细顺序以 Issue #1 为准。下一项 #3 不由本 PR 自动开始。
+详细顺序以 Issue #1 为准。#3 的术语与实验见 [`docs/lessons/01-runtime-mental-model.md`](docs/lessons/01-runtime-mental-model.md) 和 [`labs/inspect-model.md`](labs/inspect-model.md)。#4 不会由本 PR 自动开始。
 
 ## V0.1 范围边界
 
