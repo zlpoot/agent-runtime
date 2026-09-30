@@ -1,6 +1,6 @@
 # #3 最小运行协议：先分清提案与执行
 
-本课对应 [Issue #3](https://github.com/zlpoot/agent-runtime/issues/3)。本阶段只定义边界和可控模型替身；Loop、工具执行与真实模型留待各自的 Issue。
+本课对应 [Issue #3](https://github.com/zlpoot/agent-runtime/issues/3)，解释协议边界和可控模型替身。后续 #4 的完整 Loop 见 `02-serial-agent-loop.md`；`inspect-model` 实验仍停在提案。
 
 ## 六个词
 
@@ -28,7 +28,7 @@
 
 ## JSON 边界与事件约定
 
-协议在 `packages/model/src/protocol.ts`：`ModelRequest`、`ModelResponse`、`ToolCall`、`ToolResult`、`RuntimeAction`、`RuntimeEvent`、`RuntimeError`。所有传输对象带固定 `schemaVersion: 1`；`AbortSignal` 只作为本地控制参数传入 Adapter，不序列化。解析器在边界拒绝未知响应种类、空结果、非法 JSON 参数和同一响应中的重复调用 ID。
+协议在 `packages/model/src/protocol.ts`：`ModelRequest`、`ModelResponse`、`ToolCall`、`ToolResult`、`RuntimeAction`、`RuntimeEvent`、`RuntimeError`。模型请求、响应、工具结果与错误带 `schemaVersion: 1`；嵌入的调用与 Action 使用外层版本。#4 的元数据事件使用版本 2。`AbortSignal` 只作为本地控制参数传入 Adapter，不序列化。解析器在边界拒绝未知响应种类、空结果、非法 JSON 参数和同一响应中的重复调用 ID。
 
 最小协议示例（合成内容）：
 
@@ -39,7 +39,7 @@
 }
 ```
 
-事件约定从每个 `runId` 的 `sequence = 1` 开始，随后逐一递增；`modelTurnId` 指向生成事件的模型轮次。`model_response` 表示收到响应，`tool_proposed` 表示提案，`model_error` 表示模型边界错误。这里只定义结构和约定；事件持久化与重放未实现。
+事件约定从每个 `runId` 的 `sequence = 1` 开始，随后逐一递增；轮次事件的 `modelTurnId` 指向相关模型请求。#4 实现了 ModelResponded、ToolProposed、ModelFailed 等完整 Loop 事件；本课先理解它们与提案/执行的关联，事件版本演进见 ADR-002。事件持久化与重放未实现。
 
 ## 学习练习（由用户填写）
 

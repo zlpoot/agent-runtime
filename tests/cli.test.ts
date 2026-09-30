@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { resolveCliArgs } from "../apps/cli/src/index.js";
 
-describe("Issue #2 CLI scaffold", () => {
-  it("describes the unavailable runtime without credentials", () => {
+describe("CLI entry", () => {
+  it("describes the synthetic demo without credentials", () => {
     const result = resolveCliArgs(["--help"]);
     expect(result.exitCode).toBe(0);
-    expect(result.message).toContain("does not contact a model");
+    expect(result.message).toContain("does not contact a real model");
     expect(result.message).toContain("Usage: node apps/cli/dist/main.js --help");
   });
 

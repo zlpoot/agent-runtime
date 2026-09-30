@@ -1,0 +1,17 @@
+{"kind":"RunStarted","schemaVersion":2,"runId":"demo-normal","sequence":1,"elapsedMs":0.24020000000000152}
+{"kind":"ModelRequested","modelTurnId":"demo-normal.turn.1","schemaVersion":2,"runId":"demo-normal","sequence":2,"elapsedMs":2.087500000000002}
+{"kind":"ModelResponded","modelTurnId":"demo-normal.turn.1","responseKind":"tool_calls","durationMs":0.24650000000000105,"schemaVersion":2,"runId":"demo-normal","sequence":3,"elapsedMs":2.4269000000000034}
+{"kind":"ToolProposed","modelTurnId":"demo-normal.turn.1","actionId":"demo-normal.action.1","schemaVersion":2,"runId":"demo-normal","sequence":4,"elapsedMs":2.456000000000003}
+{"kind":"ToolProposed","modelTurnId":"demo-normal.turn.1","actionId":"demo-normal.action.2","schemaVersion":2,"runId":"demo-normal","sequence":5,"elapsedMs":2.5168000000000035}
+{"kind":"ToolStarted","modelTurnId":"demo-normal.turn.1","actionId":"demo-normal.action.1","attemptId":"demo-normal.action.1.attempt.1","schemaVersion":2,"runId":"demo-normal","sequence":6,"elapsedMs":2.556700000000003}
+{"kind":"ToolSucceeded","modelTurnId":"demo-normal.turn.1","actionId":"demo-normal.action.1","attemptId":"demo-normal.action.1.attempt.1","durationMs":0.054999999999999716,"schemaVersion":2,"runId":"demo-normal","sequence":7,"elapsedMs":2.690800000000003}
+{"kind":"ToolStarted","modelTurnId":"demo-normal.turn.1","actionId":"demo-normal.action.2","attemptId":"demo-normal.action.2.attempt.1","schemaVersion":2,"runId":"demo-normal","sequence":8,"elapsedMs":2.7299000000000007}
+{"kind":"ToolSucceeded","modelTurnId":"demo-normal.turn.1","actionId":"demo-normal.action.2","attemptId":"demo-normal.action.2.attempt.1","durationMs":0.005199999999998539,"schemaVersion":2,"runId":"demo-normal","sequence":9,"elapsedMs":2.8098000000000027}
+{"kind":"ModelRequested","modelTurnId":"demo-normal.turn.2","schemaVersion":2,"runId":"demo-normal","sequence":10,"elapsedMs":2.9288000000000025}
+{"kind":"ModelResponded","modelTurnId":"demo-normal.turn.2","responseKind":"tool_calls","durationMs":0.06099999999999994,"schemaVersion":2,"runId":"demo-normal","sequence":11,"elapsedMs":3.0378000000000007}
+{"kind":"ToolProposed","modelTurnId":"demo-normal.turn.2","actionId":"demo-normal.action.3","schemaVersion":2,"runId":"demo-normal","sequence":12,"elapsedMs":3.054100000000002}
+{"kind":"ToolStarted","modelTurnId":"demo-normal.turn.2","actionId":"demo-normal.action.3","attemptId":"demo-normal.action.3.attempt.1","schemaVersion":2,"runId":"demo-normal","sequence":13,"elapsedMs":3.0756000000000014}
+{"kind":"ToolSucceeded","modelTurnId":"demo-normal.turn.2","actionId":"demo-normal.action.3","attemptId":"demo-normal.action.3.attempt.1","durationMs":0.004699999999999704,"schemaVersion":2,"runId":"demo-normal","sequence":14,"elapsedMs":3.1101000000000028}
+{"kind":"ModelRequested","modelTurnId":"demo-normal.turn.3","schemaVersion":2,"runId":"demo-normal","sequence":15,"elapsedMs":3.1453000000000024}
+{"kind":"ModelResponded","modelTurnId":"demo-normal.turn.3","responseKind":"final","durationMs":0.10229999999999961,"schemaVersion":2,"runId":"demo-normal","sequence":16,"elapsedMs":3.298300000000001}
+{"kind":"RunEnded","status":"model_stopped","reason":"MODEL_STOPPED","modelTurns":3,"toolCalls":3,"schemaVersion":2,"runId":"demo-normal","sequence":17,"elapsedMs":3.313600000000001}
