@@ -12,7 +12,8 @@
     "test": "pnpm build && vitest run",
     "build": "pnpm -r run build",
     "inspect-model": "pnpm --filter @agent-runtime/model run inspect-model",
-    "demo": "pnpm build && node apps/cli/dist/main.js demo"
+    "demo": "pnpm build && node apps/cli/dist/main.js demo",
+    "lab": "pnpm build && node labs/01-agent-loop/dist/main.js"
   },
   "devDependencies": {
     "@types/node": "22.20.4",

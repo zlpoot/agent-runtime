@@ -17,3 +17,4 @@ raw-logs/
 .runtime/
 labs/workspaces/
 labs/**/workspace/
+labs/01-agent-loop/LEARNING_RECORD.local.md
