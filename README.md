@@ -39,7 +39,7 @@ node apps/cli/dist/main.js demo --jsonl
 | `apps/cli` | Fake Model + calculator 演示，支持步骤说明、JSONL 和故障场景 |
 | `packages/core` | 显式状态转换、最小串行 Loop、有限额度和取消检查 |
 | `packages/model` | 版本化模型协议、Scripted Fake Model 与提案检查实验 |
-| `packages/tools` | 纯函数 calculator，仅支持受约束的算术操作 |
+| `packages/tools` | 可信 Registry、Schema 网关、纯 calculator 和显式实验工作区内的受限文件工具 |
 | `labs` | 可重复运行的实验说明、预期故障与脱敏证据 |
 | `docs/lessons` | 学习问题、实验解释和待用户填写的学习验收 |
 | `docs/adr` | TypeScript 工程选择、显式串行 Loop 决策 |
@@ -57,6 +57,10 @@ node apps/cli/dist/main.js demo --jsonl
 
 ## V0.1 范围边界
 
-计划中的 V0.1 为单 Agent、默认串行工具、一个执行环境一个操作所有者。多 Agent、分布式 Worker、RAG、向量记忆、可视化画布、插件市场、自主 Skill 学习和真实桌面接管均不在范围内。Python 后置为适配器，不是第一版运行依赖。当前状态与 trace 都在内存/标准输出中，没有崩溃恢复能力；工具执行限定为纯算术，真实模型、shell、网络与真实文件修改留待各自阶段。
+计划中的 V0.1 为单 Agent、默认串行工具、一个执行环境一个操作所有者。多 Agent、分布式 Worker、RAG、向量记忆、可视化画布、插件市场、自主 Skill 学习和真实桌面接管均不在范围内。Python 后置为适配器，不是第一版运行依赖。当前状态与 trace 都在内存/标准输出中，没有崩溃恢复能力；工具执行限于纯算术和显式临时工作区的合成资料/新报告。真实模型、shell、网络与一般文件操作留待各自阶段。
 
 仓库尚未选择开源许可证；不要推断已有授权条款。
+
+## #6 工具网关
+
+工具契约、显式临时工作区配置、正常与故障命令见 [`labs/tool-gateway/README.md`](labs/tool-gateway/README.md)，课文见 [`docs/lessons/03-tool-gateway.md`](docs/lessons/03-tool-gateway.md)。不配置工作区即可单独装配纯 calculator；文件工具要求显式绝对路径，只读合成文件、只新建临时报告。路径约束不提供 OS sandbox。#6 仍使用 Fake Model，真实模型接入待 #7 获得授权。
