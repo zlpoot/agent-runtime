@@ -2,6 +2,8 @@
 
 实验索引：[#3 协议与提案](inspect-model.md)、[#4 串行 Loop](serial-loop.md)、[#5 Agent Loop 教学与 M0 学习 Gate](01-agent-loop/README.md)。
 
+[#6 工具网关](tool-gateway/README.md)：受限 JSON、可信定义、合成文件和未知结果实验。
+
 仅使用本地工程文件和确定性故障，不需要凭证或模型服务。故障实验在副本或可恢复的临时修改中做，结束后恢复原文件。
 
 1. 正常路径：`pnpm install --frozen-lockfile`、`pnpm typecheck`、`pnpm test`、`pnpm build`，然后运行 `node apps/cli/dist/main.js --help`。记下每项退出码。

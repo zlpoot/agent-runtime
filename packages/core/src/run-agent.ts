@@ -10,7 +10,7 @@ import {
 } from "./run-state.js";
 
 export type ToolExecutor = (
-  call: ToolCall, options: { readonly signal?: AbortSignal }
+  call: ToolCall, options: { readonly signal?: AbortSignal; readonly actionId: string; readonly attemptId: string }
 ) => ToolResult | Promise<ToolResult>;
 
 export interface RunAgentOptions {
@@ -22,6 +22,7 @@ export interface RunAgentOptions {
   readonly signal?: AbortSignal;
   readonly now?: () => number;
   readonly onEvent?: (event: RuntimeEvent) => void;
+  readonly toolErrorPolicy?: "stop" | "feedback";
 }
 
 export interface RunResult {
@@ -42,7 +43,7 @@ export async function runAgent(options: RunAgentOptions): Promise<RunResult> {
   let state: RunState = createRunState(runId, options.context ?? [], {
     maxModelTurns: options.limits?.maxModelTurns ?? 8,
     maxToolCalls: options.limits?.maxToolCalls ?? 16
-  });
+  }, options.toolErrorPolicy);
   const events: RuntimeEvent[] = [];
   const emit = (draft: EventDraft): void => {
     const event: RuntimeEvent = {
@@ -88,7 +89,9 @@ export async function runAgent(options: RunAgentOptions): Promise<RunResult> {
       }
     } else {
       try {
-        const value = await options.executeTool(command.action.call, control);
+        const value = await options.executeTool(command.action.call, {
+          ...control, actionId: command.action.actionId, attemptId: command.attemptId
+        });
         input = { kind: "tool_returned", value, durationMs: elapsed(commandStarted) };
       } catch {
         input = options.signal?.aborted

@@ -19,9 +19,9 @@ no-dispatch 的 `ToolStarted` 表示替换执行器已被调用。替换执行�
 
 ## Explain 参考与代码位置
 
-1. 模型返回结构化 `tool_calls`，不是执行结果。`runAgent` 在 [`run-agent.ts`](../../packages/core/src/run-agent.ts) **91 行**调用 `executeTool`；教学执行器在 [`engine.ts`](src/engine.ts) 实际调用纯 calculator 并累加计数。
-2. [`run-agent.ts`](../../packages/core/src/run-agent.ts) **63 行** while 检查是否 ended。决策由 [`run-state.ts`](../../packages/core/src/run-state.ts) 的 `transitionRun` 作出：**125 行**模型预算停止、**143 / 189 行**工具预算停止、**178 行**final 停止。结果处理后回到 ready_model，再由 advance 发出下一轮请求。不是单一的一行承担全部决策。
-3. [`run-state.ts`](../../packages/core/src/run-state.ts) **210 行**校验结果关联 ID，**216 行**把 tool_result 加入下一轮上下文。缺结果时下一轮无法获知执行情况；错误 ID 会把结果关联到错误提案。Action ID 用于 Runtime 内部动作标识，providerCallId 用于提案与结果关联，两者用途不同。
+1. 模型返回结构化 `tool_calls`，不是执行结果。`runAgent` 在 [`run-agent.ts`](../../packages/core/src/run-agent.ts) 的 `options.executeTool` 调用点执行提案；教学执行器在 [`engine.ts`](src/engine.ts) 实际调用纯 calculator 并累加计数。
+2. [`run-agent.ts`](../../packages/core/src/run-agent.ts) 的 `while (state.phase !== "ended")` 检查终态。决策由 [`run-state.ts`](../../packages/core/src/run-state.ts) 的 `transitionRun` 作出：搜索 `MAX_MODEL_TURNS`、`MAX_TOOL_CALLS` 与 `MODEL_STOPPED` 可定位预算和 final 分支。结果处理后回到 ready_model，再由 advance 发出下一轮请求。不是单一的一行承担全部决策。
+3. [`run-state.ts`](../../packages/core/src/run-state.ts) 的 `parsed.value.providerCallId !== state.action.call.providerCallId` 校验结果关联 ID，`kind: "tool_result"` 把结果加入下一轮上下文。缺结果时下一轮无法获知执行情况；错误 ID 会把结果关联到错误提案。Action ID 用于 Runtime 内部动作标识，providerCallId 用于提案与结果关联，两者用途不同。
 4. 当前状态、上下文与 trace 都是内存变量，输出 JSONL 没有恢复入口。kill 后不能从中恢复，重新执行是新 Run，不能推断之前副作用情况。[ADR-002](../../docs/adr/002-explicit-serial-loop.md) 明确此边界。step 也只有内存等待和外部 Enter，没有 checkpoint、持久化 Pause 或 Resume。
 
 停止状态、测试通过、模型 final 都不表示业务任务或用户学习已完成。

@@ -30,6 +30,20 @@ export interface ToolResult {
   readonly providerCallId: string;
   readonly status: "success" | "error";
   readonly content: JsonValue;
+  readonly error?: ToolError;
+}
+
+export const TOOL_ERROR_CODES = ["VALIDATION_ERROR", "TOOL_NOT_FOUND", "EXECUTION_ERROR",
+  "TIMEOUT", "CANCELLED", "INPUT_LIMIT_EXCEEDED", "OUTPUT_LIMIT_EXCEEDED",
+  "INVALID_OUTPUT", "PATH_NOT_ALLOWED", "BUSY"] as const;
+export type ToolErrorCode = (typeof TOOL_ERROR_CODES)[number];
+export type ToolOutcome = "not_started" | "failed" | "unknown";
+export interface ToolError {
+  readonly code: ToolErrorCode;
+  readonly message: string;
+  readonly outcome: ToolOutcome;
+  readonly actionId: string;
+  readonly attemptId: string;
 }
 
 export type ModelContextItem =
@@ -55,7 +69,8 @@ export const RUNTIME_ERROR_CODES = [
   "EXECUTOR_FAILURE",
   "INVALID_TOOL_RESULT",
   "MAX_MODEL_TURNS",
-  "MAX_TOOL_CALLS"
+  "MAX_TOOL_CALLS",
+  "TOOL_OUTCOME_UNKNOWN"
 ] as const;
 
 export type RuntimeErrorCode = (typeof RUNTIME_ERROR_CODES)[number];
@@ -172,7 +187,9 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-function isJsonValue(value: unknown, ancestors = new WeakSet<object>()): value is JsonValue {
+function isJsonValue(value: unknown, ancestors = new WeakSet<object>(), depth = 0): value is JsonValue {
+  // The gateway applies its stricter limit later; this guard protects protocol parsing itself.
+  if (depth > 64) return false;
   if (value === null || typeof value === "string" || typeof value === "boolean") {
     return true;
   }
@@ -195,14 +212,14 @@ function isJsonValue(value: unknown, ancestors = new WeakSet<object>()): value i
     for (let index = 0; valid && index < value.length; index++) {
       const descriptor = Object.getOwnPropertyDescriptor(value, index);
       valid = descriptor !== undefined && "value" in descriptor &&
-        isJsonValue(descriptor.value, ancestors);
+        isJsonValue(descriptor.value, ancestors, depth + 1);
     }
   } else {
     valid = Reflect.ownKeys(value).every((key) => {
       if (typeof key !== "string") return false;
       const descriptor = Object.getOwnPropertyDescriptor(value, key);
       return descriptor?.enumerable === true &&
-        "value" in descriptor && isJsonValue(descriptor.value, ancestors);
+        "value" in descriptor && isJsonValue(descriptor.value, ancestors, depth + 1);
     });
   }
   ancestors.delete(value);
@@ -239,11 +256,25 @@ function readToolResult(value: unknown): ToolResult | null {
   ) {
     return null;
   }
+  let error: ToolError | undefined;
+  if (value.error !== undefined) {
+    const candidate = value.error;
+    if (value.status !== "error" || !isRecord(candidate) ||
+      Object.keys(candidate).length !== 5 ||
+      !TOOL_ERROR_CODES.some((code) => code === candidate.code) ||
+      typeof candidate.message !== "string" || candidate.message.length < 1 || candidate.message.length > 240 ||
+      !["not_started", "failed", "unknown"].includes(candidate.outcome as string) ||
+      typeof candidate.actionId !== "string" || !/^[A-Za-z0-9._-]{1,160}$/.test(candidate.actionId) ||
+      typeof candidate.attemptId !== "string" || !/^[A-Za-z0-9._-]{1,180}$/.test(candidate.attemptId)) return null;
+    error = { code: candidate.code as ToolErrorCode, message: candidate.message,
+      outcome: candidate.outcome as ToolOutcome, actionId: candidate.actionId, attemptId: candidate.attemptId };
+  }
   return {
     schemaVersion: SCHEMA_VERSION,
     providerCallId: value.providerCallId,
     status: value.status,
-    content: structuredClone(value.content)
+    content: structuredClone(value.content),
+    ...(error === undefined ? {} : { error })
   };
 }
 

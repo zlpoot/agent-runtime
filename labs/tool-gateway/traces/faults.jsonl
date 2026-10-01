@@ -1,0 +1,15 @@
+{"schemaVersion":1,"actionId":"gateway-faults.action.1","attemptId":"gateway-faults.action.1.attempt.1","kind":"GatewayRejected","code":"TOOL_NOT_FOUND","outcome":"not_started","labSequence":1}
+{"schemaVersion":1,"actionId":"gateway-faults.action.2","attemptId":"gateway-faults.action.2.attempt.1","kind":"GatewayRejected","code":"VALIDATION_ERROR","outcome":"not_started","labSequence":2}
+{"schemaVersion":1,"actionId":"gateway-faults.action.3","attemptId":"gateway-faults.action.3.attempt.1","kind":"GatewayRejected","code":"VALIDATION_ERROR","outcome":"not_started","labSequence":3}
+{"schemaVersion":1,"actionId":"gateway-faults.action.4","attemptId":"gateway-faults.action.4.attempt.1","kind":"GatewayRejected","code":"VALIDATION_ERROR","outcome":"not_started","labSequence":4}
+{"schemaVersion":1,"actionId":"gateway-faults.action.5","attemptId":"gateway-faults.action.5.attempt.1","kind":"GatewayRejected","code":"INPUT_LIMIT_EXCEEDED","outcome":"not_started","labSequence":5}
+{"schemaVersion":1,"actionId":"gateway-faults.action.6","attemptId":"gateway-faults.action.6.attempt.1","kind":"GatewayInvoked","labSequence":6}
+{"schemaVersion":1,"actionId":"gateway-faults.action.6","attemptId":"gateway-faults.action.6.attempt.1","kind":"GatewayFailed","code":"INVALID_OUTPUT","outcome":"failed","labSequence":7}
+{"schemaVersion":1,"actionId":"gateway-faults.action.7","attemptId":"gateway-faults.action.7.attempt.1","kind":"GatewayInvoked","labSequence":8}
+{"schemaVersion":1,"actionId":"gateway-faults.action.7","attemptId":"gateway-faults.action.7.attempt.1","kind":"GatewayFailed","code":"EXECUTION_ERROR","outcome":"failed","labSequence":9}
+{"schemaVersion":1,"actionId":"gateway-faults.action.8","attemptId":"gateway-faults.action.8.attempt.1","kind":"GatewayRejected","code":"PATH_NOT_ALLOWED","outcome":"not_started","labSequence":10}
+{"schemaVersion":1,"actionId":"gateway-faults.action.9","attemptId":"gateway-faults.action.9.attempt.1","kind":"GatewayRejected","code":"PATH_NOT_ALLOWED","outcome":"not_started","labSequence":11}
+{"schemaVersion":1,"actionId":"gateway-faults.action.10","attemptId":"gateway-faults.action.10.attempt.1","kind":"GatewayRejected","code":"VALIDATION_ERROR","outcome":"not_started","labSequence":12}
+{"schemaVersion":1,"actionId":"gateway-faults.action.11","attemptId":"gateway-faults.action.11.attempt.1","kind":"GatewayRejected","code":"PATH_NOT_ALLOWED","outcome":"not_started","labSequence":13}
+{"schemaVersion":1,"actionId":"gateway-faults.action.12","attemptId":"gateway-faults.action.12.attempt.1","kind":"GatewayRejected","code":"PATH_NOT_ALLOWED","outcome":"not_started","labSequence":14}
+{"schemaVersion":1,"kind":"GatewayLabObservation","scenario":"faults","implementationCalls":2,"rejections":10,"labSequence":15}

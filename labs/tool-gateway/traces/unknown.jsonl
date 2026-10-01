@@ -1,0 +1,10 @@
+{"kind":"RunStarted","schemaVersion":2,"runId":"gateway-unknown","sequence":1,"elapsedMs":0.20349999999999113,"labSequence":1}
+{"kind":"ModelRequested","modelTurnId":"gateway-unknown.turn.1","schemaVersion":2,"runId":"gateway-unknown","sequence":2,"elapsedMs":1.9302000000000135,"labSequence":2}
+{"kind":"ModelResponded","modelTurnId":"gateway-unknown.turn.1","responseKind":"tool_calls","durationMs":0.21809999999999263,"schemaVersion":2,"runId":"gateway-unknown","sequence":3,"elapsedMs":2.306999999999988,"labSequence":3}
+{"kind":"ToolProposed","modelTurnId":"gateway-unknown.turn.1","actionId":"gateway-unknown.action.1","schemaVersion":2,"runId":"gateway-unknown","sequence":4,"elapsedMs":2.350999999999999,"labSequence":4}
+{"kind":"ToolStarted","modelTurnId":"gateway-unknown.turn.1","actionId":"gateway-unknown.action.1","attemptId":"gateway-unknown.action.1.attempt.1","schemaVersion":2,"runId":"gateway-unknown","sequence":5,"elapsedMs":2.3980999999999995,"labSequence":5}
+{"schemaVersion":1,"actionId":"gateway-unknown.action.1","attemptId":"gateway-unknown.action.1.attempt.1","kind":"GatewayInvoked","labSequence":6}
+{"schemaVersion":1,"actionId":"gateway-unknown.action.1","attemptId":"gateway-unknown.action.1.attempt.1","kind":"GatewayFailed","code":"TIMEOUT","outcome":"unknown","labSequence":7}
+{"kind":"ToolFailed","modelTurnId":"gateway-unknown.turn.1","actionId":"gateway-unknown.action.1","attemptId":"gateway-unknown.action.1.attempt.1","durationMs":0.8215999999999894,"errorCode":"TOOL_OUTCOME_UNKNOWN","schemaVersion":2,"runId":"gateway-unknown","sequence":6,"elapsedMs":3.6333999999999946,"labSequence":8}
+{"kind":"RunEnded","status":"failed","reason":"TOOL_OUTCOME_UNKNOWN","modelTurns":1,"toolCalls":1,"schemaVersion":2,"runId":"gateway-unknown","sequence":7,"elapsedMs":3.840900000000005,"labSequence":9}
+{"schemaVersion":1,"kind":"GatewayLabObservation","scenario":"unknown","status":"failed","reason":"TOOL_OUTCOME_UNKNOWN","modelTurns":1,"toolCalls":1,"implementationCalls":1,"rejections":0,"lateSyntheticEffects":1,"labSequence":10}

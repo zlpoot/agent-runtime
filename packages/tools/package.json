@@ -6,7 +6,7 @@
   "exports": {
     ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
   },
-  "dependencies": { "@agent-runtime/model": "workspace:*" },
+  "dependencies": { "@agent-runtime/model": "workspace:*", "ajv": "8.20.0" },
   "scripts": {
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "build": "tsc --project tsconfig.json"

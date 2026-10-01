@@ -16,6 +16,7 @@ interface StateData {
   readonly modelTurns: number;
   readonly toolCalls: number;
   readonly nextActionNumber: number;
+  readonly toolErrorPolicy: "stop" | "feedback";
 }
 
 export type RunState = StateData & (
@@ -44,7 +45,7 @@ export type EventDraft = WithoutEnvelope<RuntimeEvent>;
 
 export type RunCommand =
   | { readonly kind: "request_model"; readonly request: ModelRequest }
-  | { readonly kind: "execute_tool"; readonly action: RuntimeAction }
+  | { readonly kind: "execute_tool"; readonly action: RuntimeAction; readonly attemptId: string }
   | { readonly kind: "none" };
 
 export type RunInput =
@@ -62,7 +63,8 @@ export interface Transition {
 }
 
 export function createRunState(
-  runId: string, context: readonly ModelContextItem[], limits: RunLimits
+  runId: string, context: readonly ModelContextItem[], limits: RunLimits,
+  toolErrorPolicy: "stop" | "feedback" = "stop"
 ): RunState {
   if (!/^[A-Za-z0-9._-]{1,80}$/.test(runId)) {
     throw new RangeError("runId must be a short metadata identifier.");
@@ -77,7 +79,7 @@ export function createRunState(
   if (!parsed.ok) throw new TypeError("Invalid initial model context.");
   return {
     phase: "ready_model", runId, context: parsed.value.context,
-    limits: { ...limits }, modelTurns: 0, toolCalls: 0, nextActionNumber: 1
+    limits: { ...limits }, modelTurns: 0, toolCalls: 0, nextActionNumber: 1, toolErrorPolicy
   };
 }
 
@@ -85,7 +87,7 @@ function dataOf(state: RunState): StateData {
   return {
     runId: state.runId, context: state.context, limits: state.limits,
     modelTurns: state.modelTurns, toolCalls: state.toolCalls,
-    nextActionNumber: state.nextActionNumber
+    nextActionNumber: state.nextActionNumber, toolErrorPolicy: state.toolErrorPolicy
   };
 }
 
@@ -146,7 +148,7 @@ export function transitionRun(state: RunState, input: RunInput): Transition {
     return {
       state: { ...dataOf(state), phase: "awaiting_tool", modelTurnId: state.modelTurnId,
         action, remaining, attemptId, toolCalls: state.toolCalls + 1 },
-      command: { kind: "execute_tool", action: structuredClone(action) },
+      command: { kind: "execute_tool", action: structuredClone(action), attemptId },
       events: [{ kind: "ToolStarted", modelTurnId: state.modelTurnId,
         actionId: action.actionId, attemptId }]
     };
@@ -212,10 +214,33 @@ export function transitionRun(state: RunState, input: RunInput): Transition {
         kind: "ToolFailed", ...attempt, errorCode: "INVALID_TOOL_RESULT"
       }]);
     }
+    if (parsed.value.error !== undefined &&
+      (parsed.value.error.actionId !== state.action.actionId || parsed.value.error.attemptId !== state.attemptId)) {
+      return stop(state, "failed", "INVALID_TOOL_RESULT", [{
+        kind: "ToolFailed", ...attempt, errorCode: "INVALID_TOOL_RESULT"
+      }]);
+    }
     const data = { ...dataOf(state), context: [
       ...state.context, { kind: "tool_result" as const, result: parsed.value }
     ] };
     if (parsed.value.status === "error") {
+      if (parsed.value.error?.outcome === "unknown") {
+        return stop({ ...state, ...data }, "failed", "TOOL_OUTCOME_UNKNOWN", [{
+          kind: "ToolFailed", ...attempt, errorCode: "TOOL_OUTCOME_UNKNOWN"
+        }]);
+      }
+      if (parsed.value.error?.code === "CANCELLED" && parsed.value.error.outcome === "not_started") {
+        return stop({ ...state, ...data }, "cancelled", "ABORTED", [{
+          kind: "ToolFailed", ...attempt, errorCode: "ABORTED"
+        }]);
+      }
+      if (state.toolErrorPolicy === "feedback" && parsed.value.error?.outcome === "not_started") {
+        return {
+          state: state.remaining.length === 0 ? { ...data, phase: "ready_model" }
+            : { ...data, phase: "ready_tool", modelTurnId: state.modelTurnId, queue: state.remaining },
+          command: { kind: "none" }, events: [{ kind: "ToolFailed", ...attempt, errorCode: "TOOL_FAILURE" }]
+        };
+      }
       return stop({ ...state, ...data }, "failed", "TOOL_FAILURE", [{
         kind: "ToolFailed", ...attempt, errorCode: "TOOL_FAILURE"
       }]);
