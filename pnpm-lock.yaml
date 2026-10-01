@@ -21,13 +21,31 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@22.20.4)(vite@7.3.1(@types/node@22.20.4))
 
-  apps/cli: {}
+  apps/cli:
+    dependencies:
+      '@agent-runtime/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@agent-runtime/model':
+        specifier: workspace:*
+        version: link:../../packages/model
+      '@agent-runtime/tools':
+        specifier: workspace:*
+        version: link:../../packages/tools
 
-  packages/core: {}
+  packages/core:
+    dependencies:
+      '@agent-runtime/model':
+        specifier: workspace:*
+        version: link:../model
 
   packages/model: {}
 
-  packages/tools: {}
+  packages/tools:
+    dependencies:
+      '@agent-runtime/model':
+        specifier: workspace:*
+        version: link:../model
 
 packages:
 

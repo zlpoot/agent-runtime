@@ -1,4 +1,5 @@
 export const SCHEMA_VERSION = 1 as const;
+export const EVENT_SCHEMA_VERSION = 2 as const;
 
 export type JsonValue =
   | null
@@ -18,7 +19,7 @@ export interface ToolCall {
   readonly arguments: JsonObject;
 }
 
-// Assigned by a future Runtime after it accepts a provider proposal.
+// Assigned by the Runtime after it accepts a complete provider proposal.
 export interface RuntimeAction {
   readonly actionId: string;
   readonly call: ToolCall;
@@ -33,6 +34,7 @@ export interface ToolResult {
 
 export type ModelContextItem =
   | { readonly kind: "user" | "assistant"; readonly text: string }
+  | { readonly kind: "assistant_tool_calls"; readonly calls: readonly ToolCall[] }
   | { readonly kind: "tool_result"; readonly result: ToolResult };
 
 export interface ModelRequest {
@@ -48,7 +50,12 @@ export const RUNTIME_ERROR_CODES = [
   "SCRIPT_EXHAUSTED",
   "MODEL_FAILURE",
   "ABORTED",
-  "EXPECTED_TOOL_RESULT_MISSING"
+  "EXPECTED_TOOL_RESULT_MISSING",
+  "TOOL_FAILURE",
+  "EXECUTOR_FAILURE",
+  "INVALID_TOOL_RESULT",
+  "MAX_MODEL_TURNS",
+  "MAX_TOOL_CALLS"
 ] as const;
 
 export type RuntimeErrorCode = (typeof RUNTIME_ERROR_CODES)[number];
@@ -77,25 +84,53 @@ export type ModelResponse =
       readonly error: RuntimeError;
     };
 
+export type RunStatus = "model_stopped" | "failed" | "budget_exhausted" | "cancelled";
+export type RunEndReason = "MODEL_STOPPED" | RuntimeErrorCode;
+
 interface EventBase {
-  readonly schemaVersion: typeof SCHEMA_VERSION;
+  readonly schemaVersion: typeof EVENT_SCHEMA_VERSION;
   readonly runId: string;
   readonly sequence: number;
+  readonly elapsedMs: number;
+}
+
+interface TurnEvent extends EventBase {
   readonly modelTurnId: string;
 }
 
+interface ActionEvent extends TurnEvent {
+  readonly actionId: string;
+}
+
+interface AttemptEvent extends ActionEvent {
+  readonly attemptId: string;
+  readonly durationMs: number;
+}
+
+// Trace events contain only Runtime metadata, never request/response bodies.
 export type RuntimeEvent =
-  | (EventBase & {
-      readonly kind: "model_response";
-      readonly responseKind: "final" | "tool_calls";
+  | (EventBase & { readonly kind: "RunStarted" })
+  | (TurnEvent & { readonly kind: "ModelRequested" })
+  | (TurnEvent & {
+      readonly kind: "ModelResponded";
+      readonly responseKind: ModelResponse["kind"];
+      readonly durationMs: number;
     })
-  | (EventBase & {
-      readonly kind: "tool_proposed";
-      readonly action: RuntimeAction;
+  | (TurnEvent & {
+      readonly kind: "ModelFailed";
+      readonly errorCode: RuntimeErrorCode;
+      readonly durationMs: number;
     })
+  | (ActionEvent & { readonly kind: "ToolProposed" })
+  | (ActionEvent & { readonly kind: "ToolStarted"; readonly attemptId: string })
+  | (AttemptEvent & { readonly kind: "ToolSucceeded" })
+  | (AttemptEvent & { readonly kind: "ToolFailed"; readonly errorCode: RuntimeErrorCode })
   | (EventBase & {
-      readonly kind: "model_error";
-      readonly error: RuntimeError;
+      readonly kind: "RunEnded";
+      readonly status: RunStatus;
+      readonly reason: RunEndReason;
+      readonly modelTurns: number;
+      readonly toolCalls: number;
     });
 
 export interface ModelCapabilities {
@@ -194,7 +229,7 @@ function parseToolCall(value: unknown): ToolCall | null {
   };
 }
 
-function parseToolResult(value: unknown): ToolResult | null {
+function readToolResult(value: unknown): ToolResult | null {
   if (
     !isRecord(value) ||
     value.schemaVersion !== SCHEMA_VERSION ||
@@ -210,6 +245,13 @@ function parseToolResult(value: unknown): ToolResult | null {
     status: value.status,
     content: structuredClone(value.content)
   };
+}
+
+export function parseToolResult(value: unknown): ParseResult<ToolResult> {
+  const result = readToolResult(value);
+  return result === null
+    ? { ok: false, error: runtimeError("INVALID_TOOL_RESULT", "Invalid tool result.") }
+    : { ok: true, value: result };
 }
 
 function parseRuntimeError(value: unknown): RuntimeError | null {
@@ -250,9 +292,18 @@ export function parseModelRequest(value: unknown): ParseResult<ModelRequest> {
       continue;
     }
     if (item.kind === "tool_result") {
-      const result = parseToolResult(item.result);
+      const result = readToolResult(item.result);
       if (result !== null) {
         context.push({ kind: "tool_result", result });
+        continue;
+      }
+    }
+    if (item.kind === "assistant_tool_calls") {
+      const response = parseModelResponse({
+        schemaVersion: SCHEMA_VERSION, kind: "tool_calls", calls: item.calls
+      });
+      if (response.ok && response.value.kind === "tool_calls") {
+        context.push({ kind: "assistant_tool_calls", calls: response.value.calls });
         continue;
       }
     }

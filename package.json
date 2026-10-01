@@ -8,10 +8,11 @@
     "node": "22.22.1"
   },
   "scripts": {
-    "typecheck": "tsc --project tsconfig.json --noEmit && pnpm -r run typecheck",
-    "test": "vitest run",
+    "typecheck": "pnpm build && tsc --project tsconfig.json --noEmit",
+    "test": "pnpm build && vitest run",
     "build": "pnpm -r run build",
-    "inspect-model": "pnpm --filter @agent-runtime/model run inspect-model"
+    "inspect-model": "pnpm --filter @agent-runtime/model run inspect-model",
+    "demo": "pnpm build && node apps/cli/dist/main.js demo"
   },
   "devDependencies": {
     "@types/node": "22.20.4",

@@ -13,6 +13,15 @@ const call = (providerCallId: string) => ({
 });
 
 describe("versioned model protocol", () => {
+  it("accepts assistant proposals in context only after complete response validation", () => {
+    const request = { schemaVersion: 1, runId: "run", modelTurnId: "turn", context: [
+      { kind: "assistant_tool_calls", calls: [call("a"), call("b")] }
+    ] };
+    expect(parseModelRequest(request)).toEqual({ ok: true, value: request });
+    expect(parseModelRequest({ ...request, context: [
+      { kind: "assistant_tool_calls", calls: [call("a"), call("a")] }
+    ] })).toMatchObject({ ok: false, error: { code: "INVALID_REQUEST" } });
+  });
   it("preserves multiple proposals in provider order through JSON", () => {
     const raw = { schemaVersion: SCHEMA_VERSION, kind: "tool_calls", calls: [call("a"), call("b")] };
     const parsed = decodeModelResponse(JSON.stringify(raw));
