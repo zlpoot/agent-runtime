@@ -1,0 +1,13 @@
+{"kind":"RunStarted","schemaVersion":2,"runId":"lab-step","sequence":1,"elapsedMs":0.17830000000000013,"labSequence":1}
+{"kind":"ModelRequested","modelTurnId":"lab-step.turn.1","schemaVersion":2,"runId":"lab-step","sequence":2,"elapsedMs":0.7815000000000012,"labSequence":2}
+{"ordinal":1,"stage":"before_model_response","schemaVersion":1,"kind":"TeachingPause","runId":"lab-step","afterRuntimeSequence":2,"labSequence":3}
+{"kind":"ModelResponded","modelTurnId":"lab-step.turn.1","responseKind":"tool_calls","durationMs":1.155700000000003,"schemaVersion":2,"runId":"lab-step","sequence":3,"elapsedMs":2.0911000000000044,"labSequence":4}
+{"kind":"ToolProposed","modelTurnId":"lab-step.turn.1","actionId":"lab-step.action.1","schemaVersion":2,"runId":"lab-step","sequence":4,"elapsedMs":2.261800000000001,"labSequence":5}
+{"kind":"ToolStarted","modelTurnId":"lab-step.turn.1","actionId":"lab-step.action.1","attemptId":"lab-step.action.1.attempt.1","schemaVersion":2,"runId":"lab-step","sequence":5,"elapsedMs":2.332800000000006,"labSequence":6}
+{"ordinal":2,"stage":"before_calculator","schemaVersion":1,"kind":"TeachingPause","runId":"lab-step","afterRuntimeSequence":5,"labSequence":7}
+{"kind":"ToolSucceeded","modelTurnId":"lab-step.turn.1","actionId":"lab-step.action.1","attemptId":"lab-step.action.1.attempt.1","durationMs":0.2679999999999936,"schemaVersion":2,"runId":"lab-step","sequence":6,"elapsedMs":2.698600000000006,"labSequence":8}
+{"kind":"ModelRequested","modelTurnId":"lab-step.turn.2","schemaVersion":2,"runId":"lab-step","sequence":7,"elapsedMs":2.7739000000000047,"labSequence":9}
+{"ordinal":3,"stage":"before_model_response","schemaVersion":1,"kind":"TeachingPause","runId":"lab-step","afterRuntimeSequence":7,"labSequence":10}
+{"kind":"ModelResponded","modelTurnId":"lab-step.turn.2","responseKind":"final","durationMs":0.19559999999999889,"schemaVersion":2,"runId":"lab-step","sequence":8,"elapsedMs":3.0992000000000033,"labSequence":11}
+{"kind":"RunEnded","status":"model_stopped","reason":"MODEL_STOPPED","modelTurns":2,"toolCalls":1,"schemaVersion":2,"runId":"lab-step","sequence":9,"elapsedMs":3.1292000000000044,"labSequence":12}
+{"schemaVersion":1,"kind":"LabObservation","runId":"lab-step","mode":"step","fault":null,"faultLayer":null,"status":"model_stopped","reason":"MODEL_STOPPED","modelTurns":2,"toolCommands":1,"calculatorExecutions":1,"lastModelToolResults":1,"proposedToolCalls":1,"labSequence":13}

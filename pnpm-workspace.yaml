@@ -1,6 +1,7 @@
 packages:
   - apps/*
   - packages/*
+  - labs/01-agent-loop
 
 engineStrict: true
 packageManagerStrictVersion: true

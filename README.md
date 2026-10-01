@@ -22,6 +22,10 @@ pnpm test
 pnpm build
 pnpm inspect-model
 pnpm demo
+pnpm lab agent-loop inspect
+pnpm lab agent-loop execute
+pnpm lab agent-loop break
+pnpm lab agent-loop step
 node apps/cli/dist/main.js --help
 node apps/cli/dist/main.js demo --jsonl
 ```
@@ -49,7 +53,7 @@ node apps/cli/dist/main.js demo --jsonl
 | M5–M8 | #15–#24 | 恢复、副作用对账、上下文、控制面与完成验收 |
 | 集成与 V0.1 | #25–#27 | 独立集成和综合验收 |
 
-详细顺序以 Issue #1 为准。#3 的术语与实验见 [`docs/lessons/01-runtime-mental-model.md`](docs/lessons/01-runtime-mental-model.md) 和 [`labs/inspect-model.md`](labs/inspect-model.md)。#4 的流程图和实验见 [`docs/lessons/02-serial-agent-loop.md`](docs/lessons/02-serial-agent-loop.md) 和 [`labs/serial-loop.md`](labs/serial-loop.md)。#5 学习 Gate 由用户验收，后续 Issue 需获得授权。
+详细顺序以 Issue #1 为准。#3 的术语与实验见 [`docs/lessons/01-runtime-mental-model.md`](docs/lessons/01-runtime-mental-model.md) 和 [`labs/inspect-model.md`](labs/inspect-model.md)。#4 的流程图和实验见 [`docs/lessons/02-serial-agent-loop.md`](docs/lessons/02-serial-agent-loop.md) 和 [`labs/serial-loop.md`](labs/serial-loop.md)。#5 的课文、四种模式和空白学习记录见 [`labs/01-agent-loop/README.md`](labs/01-agent-loop/README.md)。学习 Gate 由用户验收，后续 Issue 需获得授权。
 
 ## V0.1 范围边界
 

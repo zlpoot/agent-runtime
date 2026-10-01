@@ -33,6 +33,18 @@ importers:
         specifier: workspace:*
         version: link:../../packages/tools
 
+  labs/01-agent-loop:
+    dependencies:
+      '@agent-runtime/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@agent-runtime/model':
+        specifier: workspace:*
+        version: link:../../packages/model
+      '@agent-runtime/tools':
+        specifier: workspace:*
+        version: link:../../packages/tools
+
   packages/core:
     dependencies:
       '@agent-runtime/model':

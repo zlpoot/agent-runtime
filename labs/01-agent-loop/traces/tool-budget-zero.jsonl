@@ -1,0 +1,6 @@
+{"kind":"RunStarted","schemaVersion":2,"runId":"lab-break-infinite","sequence":1,"elapsedMs":0.34029999999999916,"labSequence":1}
+{"kind":"ModelRequested","modelTurnId":"lab-break-infinite.turn.1","schemaVersion":2,"runId":"lab-break-infinite","sequence":2,"elapsedMs":5.392499999999998,"labSequence":2}
+{"kind":"ModelResponded","modelTurnId":"lab-break-infinite.turn.1","responseKind":"tool_calls","durationMs":0.9581000000000017,"schemaVersion":2,"runId":"lab-break-infinite","sequence":3,"elapsedMs":6.862099999999998,"labSequence":3}
+{"kind":"ToolProposed","modelTurnId":"lab-break-infinite.turn.1","actionId":"lab-break-infinite.action.1","schemaVersion":2,"runId":"lab-break-infinite","sequence":4,"elapsedMs":6.9726,"labSequence":4}
+{"kind":"RunEnded","status":"budget_exhausted","reason":"MAX_TOOL_CALLS","modelTurns":1,"toolCalls":0,"schemaVersion":2,"runId":"lab-break-infinite","sequence":5,"elapsedMs":7.052399999999999,"labSequence":5}
+{"schemaVersion":1,"kind":"LabObservation","runId":"lab-break-infinite","mode":"break","fault":"infinite","faultLayer":"scheduling","status":"budget_exhausted","reason":"MAX_TOOL_CALLS","modelTurns":1,"toolCommands":0,"calculatorExecutions":0,"lastModelToolResults":0,"proposedToolCalls":1,"labSequence":6}

@@ -1,0 +1,1 @@
+{"schemaVersion":1,"kind":"LabObservation","runId":"lab-inspect","mode":"inspect","fault":null,"faultLayer":null,"status":"proposal_only","reason":"PROPOSAL_ONLY","modelTurns":1,"toolCommands":0,"calculatorExecutions":0,"lastModelToolResults":0,"proposedToolCalls":1,"labSequence":1}
